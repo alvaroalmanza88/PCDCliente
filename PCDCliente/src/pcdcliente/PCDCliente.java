@@ -43,5 +43,17 @@ public class PCDCliente {
     public static void main(String[] args) {
         // TODO code application logic here
     }
-    
+    new PCDCliente();
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == btnenviar){
+            try{
+                
+            }catch (Exception ex){
+                System.out.println(ex.getMessage());
+            }
+        }
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
