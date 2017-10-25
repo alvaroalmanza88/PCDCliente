@@ -110,8 +110,24 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        //EL CODIGO DEL BOTON VA AQUI
-    }//GEN-LAST:event_jButton1ActionPerformed
+        //implementacion del codigo
+    }(evt.getSource() == jButton1){
+        try {
+            Socket cli=new Socket(127.0.0.1,5500); //Aqui pondriamos la Ip y el Puerto
+            
+            Clienteconex conex=new Clienteconex();
+            conex.setjTextField2(jTextField2.getText());
+            conex.setjTextField3(jTextField3.getText());
+            ObjectOutputStream flujo=
+                    new ObjectOutputStream(cli.getOutputStream());
+            flujo.writeObject (conex);
+            cli.close();
+        } catch (Exception ex) {
+            System.out.println("Error de conexion" +
+            ex.getMessage());
+        }
+        
+        //fin de codigo
 
     /**
      * @param args the command line arguments
