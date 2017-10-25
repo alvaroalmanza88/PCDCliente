@@ -4,6 +4,9 @@
  */
 package pcdcliente;
 
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
 /**
  *
  * @author alvar
