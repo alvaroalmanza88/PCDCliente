@@ -164,7 +164,8 @@ public class Principal extends javax.swing.JFrame {
         if(respuesta == JFileChooser.APPROVE_OPTION)
         {
             File seleccion = fc.getSelectedFile();
-            jTextField1.setText(fc.getName(seleccion));
+            jTextField1.setText(fc.getCurrentDirectory()+"\\"+fc.getName(seleccion));
+            
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
