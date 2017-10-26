@@ -4,8 +4,14 @@
  */
 package pcdcliente;
 
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -16,6 +22,12 @@ public class Principal extends javax.swing.JFrame {
     /**
      * Creates new form Principal
      */
+    Socket yo = null;
+    PrintWriter alServidor;
+    DataInputStream delServidor;
+    String datos;
+    String direccion;
+    int puerto;
     public Principal() {
         initComponents();
     }
@@ -112,25 +124,20 @@ public class Principal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         //implementacion del codigo
-    }(evt.getSource() == jButton1){
-        try {
-            Socket cli=new Socket(127.0.0.1,5500); //Aqui pondriamos la Ip y el Puerto
-            
-            Clienteconex conex=new Clienteconex();
-            conex.setjTextField2(jTextField2.getText());
-            conex.setjTextField3(jTextField3.getText());
-            ObjectOutputStream flujo=
-                    new ObjectOutputStream(cli.getOutputStream());
-            flujo.writeObject (conex);
-            cli.close();
-        } catch (Exception ex) {
-            System.out.println("Error de conexion" +
-            ex.getMessage());
+        direccion=jTextField3.getText();
+        puerto=Integer.parseInt(jTextField2.getText());
+        try{
+                    yo = new Socket(direccion,puerto);
+   		}
+            catch (UnknownHostException e)
+            {
+   		System.out.println(e.getMessage());
+            } catch (IOException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        //fin de codigo
+    }
 
     /**
      * @param args the command line arguments
