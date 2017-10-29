@@ -149,7 +149,7 @@ public class Principal extends javax.swing.JFrame {
         if(respuesta == JFileChooser.APPROVE_OPTION)
         {
             File seleccion = fc.getSelectedFile();
-            fi_fichero.setText(fc.getCurrentDirectory()+"\\"+fc.getName(seleccion));
+            fi_fichero.setText(seleccion.getAbsolutePath());
             
         }
     }//GEN-LAST:event_bt_ficheroActionPerformed
