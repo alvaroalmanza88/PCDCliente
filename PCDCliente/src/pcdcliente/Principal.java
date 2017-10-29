@@ -4,22 +4,15 @@
  */
 package pcdcliente;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.text.Utilities;
+import javax.swing.*;
+
 
 /**
  *
@@ -30,19 +23,12 @@ public class Principal extends javax.swing.JFrame {
     /**
      * Creates new form Principal
      */
-    Socket yo = null;
-    PrintWriter alServidor;
-    DataInputStream delServidor;
-    String datos;
-    String direccion;
-    int puerto;
-    boolean ipok;
-    boolean puertook;
-    BufferedInputStream bis;
-    BufferedOutputStream bos;
+    private Socket yo = null;
+    private String direccion;
+    private int puerto;
+    
     public Principal() {
         initComponents();
-        jButton2.setEnabled(false);
     }
 
     /**
@@ -55,32 +41,33 @@ public class Principal extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jTextField3 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
+        et_ip = new javax.swing.JLabel();
+        fi_puerto = new javax.swing.JTextField();
+        et_puerto = new javax.swing.JLabel();
+        bt_conectar = new javax.swing.JButton();
+        fi_ip = new javax.swing.JTextField();
+        bt_fichero = new javax.swing.JButton();
+        fi_fichero = new javax.swing.JTextField();
+        et_titulo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("PCDCliente");
 
-        jLabel3.setText("IP:");
+        et_ip.setText("IP:");
 
-        jLabel4.setText("Puerto:");
+        et_puerto.setText("Puerto:");
 
-        jButton1.setText("Conectar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        bt_conectar.setText("Conectar");
+        bt_conectar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                bt_conectarActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Seleccionar Archivo");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        bt_fichero.setText("Seleccionar Archivo");
+        bt_fichero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                bt_ficheroActionPerformed(evt);
             }
         });
 
@@ -89,66 +76,64 @@ public class Principal extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
+                        .addComponent(et_ip)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(38, 38, 38)
-                        .addComponent(jButton1)))
-                .addGap(130, 130, 130))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1)
-                .addContainerGap())
+                        .addComponent(fi_ip, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
+                        .addComponent(et_puerto)
+                        .addGap(18, 18, 18)
+                        .addComponent(fi_puerto, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(bt_fichero)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(bt_conectar)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(fi_fichero))))
+                .addGap(35, 35, 35))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(et_ip)
+                    .addComponent(fi_ip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fi_puerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(et_puerto))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(80, Short.MAX_VALUE))
+                    .addComponent(bt_fichero)
+                    .addComponent(fi_fichero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bt_conectar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel1.setText("Programa Cliente");
+        et_titulo.setText("Programa Cliente");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(136, 136, 136)
-                        .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(167, 167, 167)
+                .addComponent(et_titulo)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(8, 8, 8)
-                .addComponent(jLabel1)
+                .addComponent(et_titulo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -157,40 +142,57 @@ public class Principal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void bt_ficheroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_ficheroActionPerformed
         // TODO add your handling code here:
         JFileChooser fc = new JFileChooser();
         int respuesta = fc.showOpenDialog(this);
         if(respuesta == JFileChooser.APPROVE_OPTION)
         {
             File seleccion = fc.getSelectedFile();
-            jTextField1.setText(fc.getCurrentDirectory()+"\\"+fc.getName(seleccion));
+            fi_fichero.setText(fc.getCurrentDirectory()+"\\"+fc.getName(seleccion));
             
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_bt_ficheroActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    private void bt_conectarActionPerformed(java.awt.event.ActionEvent evt) {                                         
         //implementacion del codigo
-        ipok=ipvalida(jTextField3.getText());
-        if (ipok)
+        String linea = "";
+        BufferedReader fichero = null;
+        Comunicacion comunicador = null;
+        Escuchar escucha = null;
+        Escribir escribe = null;
+        
+        if (ipvalida(fi_ip.getText()))
         {
-            direccion=jTextField3.getText();
+            direccion=fi_ip.getText();
         }else
         {
             JOptionPane.showMessageDialog(this,"No Ha introducido una direccion valida");
-            jTextField3.setText("");
-            jTextField2.setText("");
+            fi_ip.setText("");
+            fi_puerto.setText("");
+            return;
         }
-        puertook=puertoValido(Integer.parseInt(jTextField2.getText()));
-        if(puertook)
+        
+        if(puertoValido(fi_puerto.getText()))
         {
-            puerto=Integer.parseInt(jTextField2.getText());
+            puerto=Integer.parseInt(fi_puerto.getText());
+            System.out.println(fi_fichero.getText());
+            try {
+                fichero = new BufferedReader(new FileReader(fi_fichero.getText()));
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+             
             try
             {
-                yo = new Socket(direccion,puerto);
-                JOptionPane.showMessageDialog(this,"Se ha Conectado correctamente al servidor");
-                jButton2.setEnabled(true);
-                jButton1.setEnabled(false);
+                yo = new Socket(direccion,puerto);                
+                bt_conectar.setEnabled(false);
+                comunicador = new Comunicacion(yo);
+                escucha = new Escuchar(comunicador);
+                escribe = new Escribir(comunicador, fichero);
+                
+                escucha.start();
+                escribe.start();
             }
             catch (UnknownHostException e)
             {
@@ -199,8 +201,6 @@ public class Principal extends javax.swing.JFrame {
             } catch (IOException ex) 
             {
                 JOptionPane.showMessageDialog(this,"Se ha detectado un error, vuelva a intentarlo de nuevo");
-                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-                
             }
             
         }
@@ -242,15 +242,15 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JButton bt_conectar;
+    private javax.swing.JButton bt_fichero;
+    private javax.swing.JLabel et_ip;
+    private javax.swing.JLabel et_puerto;
+    private javax.swing.JLabel et_titulo;
+    private javax.swing.JTextField fi_fichero;
+    private javax.swing.JTextField fi_ip;
+    private javax.swing.JTextField fi_puerto;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
     public static boolean ipvalida(String ipAddr)
     {
@@ -259,20 +259,150 @@ public class Principal extends javax.swing.JFrame {
         {
             valida=true;
         }else
-        { 
+        {
             Pattern ptn = Pattern.compile("^(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})$");
             Matcher mtch = ptn.matcher(ipAddr);
             valida= mtch.find();
         }
         return valida;
     }
-    public static boolean puertoValido(int puerto)
+    public static boolean puertoValido(String p)
     {
+        int puerto = 0;
         boolean valido=false;
+        try{
+            puerto = Integer.parseInt(p);
+        }catch(NumberFormatException e){
+            valido = false;
+        }
         if (1024 <= puerto && 65535 >= puerto)
         {
             valido=true;
         }
         return valido;
+    }
+    public class Comunicacion {
+        private Socket cliente = null;
+        private BufferedReader entrada = null;
+        private DataOutputStream salida = null;
+        private Boolean seguir = true;
+        
+        public Comunicacion (Socket cliente){
+            this.cliente = cliente;
+            try{
+                this.salida = new DataOutputStream(cliente.getOutputStream());
+                this.entrada = new BufferedReader(
+                    new InputStreamReader(
+                        cliente.getInputStream()));                
+            }catch(IOException e){
+                System.out.println("Error: "+e);
+            }
+        }
+        
+        public Boolean leer(){
+            int recibo = 0;
+            int ack = 5; 
+            try{
+                while((recibo = this.entrada.read())>=0)
+                {
+                    if (recibo == ack){
+                        return true;
+                    }
+                }
+            }catch(IOException e){
+                return false;
+            }
+            if (recibo != ack)
+            {
+                return false;
+            }
+            return true;
+        }
+        
+        public void escribir(String str){
+            try{
+                for (int i = 0; i < str.length(); i++){
+                    this.salida.writeChar(str.charAt(i));
+                }
+                this.salida.writeChar(-1);
+            }catch(Exception e){
+            }
+        }
+        
+        public void enviarAck(){
+            byte ack = 0x05;
+            
+            try {
+                this.salida.write(ack);
+            } catch (IOException ex) {
+            }
+        }
+        
+        public void Cerrar(){
+            try {
+                this.seguir=false;
+                this.entrada.close();
+                this.salida.close();
+                this.cliente.close();
+            } catch (IOException ex) {
+                
+            }
+        }
+        
+        public Boolean getSeguir(){
+            return this.seguir;
+        }
+    }
+    
+    public class Escuchar extends Thread{
+        private Comunicacion comunicador = null;
+        
+        public Escuchar (Comunicacion cm){
+            this.comunicador = cm;
+        }
+        
+        public void run(){
+            synchronized (this.comunicador){
+                try {
+                    this.comunicador.wait();
+                    while (this.comunicador.getSeguir()){
+                        this.comunicador.leer();
+                        this.comunicador.notify();
+                        this.comunicador.wait();
+                    }
+                } catch (InterruptedException ex) {
+                    
+                }
+            }
+        }
+    }
+    
+    public class Escribir extends Thread{
+        private Comunicacion comunicador = null;
+        private BufferedReader fichero = null;
+        private String linea = "";
+        
+        public Escribir(Comunicacion cm, BufferedReader fi){
+            this.comunicador = cm;
+            this.fichero = fi;
+        }
+        
+        public void run(){
+            synchronized (this.comunicador){
+                try {
+                    while ((linea = fichero.readLine()) != null){
+                        this.comunicador.escribir(linea);
+                        this.comunicador.notify();
+                        this.comunicador.wait();
+                    }
+                    this.comunicador.enviarAck();
+                    this.comunicador.Cerrar();
+                    this.comunicador.notify();
+                } catch (Exception ex) {
+                    
+                }
+            }
+        }
+        
     }
 }
