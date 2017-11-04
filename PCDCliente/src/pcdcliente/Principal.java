@@ -486,6 +486,7 @@ public class Principal extends javax.swing.JFrame {
                     this.comunicador.enviarAck();
                     this.comunicador.Cerrar();
                     this.comunicador.notify();
+                    this.fichero.close();
                 } catch (Exception ex) {
                     System.out.println("No se pudo escribir en el buffer");
                 }
