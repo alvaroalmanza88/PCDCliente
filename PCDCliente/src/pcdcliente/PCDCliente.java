@@ -1,21 +1,20 @@
-/*
- * CODIGO REALIZADO POR ALVARO ALMANZA.
- * UNIVERSIDAD INTERNACIONAL I DE CASTILLA
- */
+
 package pcdcliente;
 
 /**
- *
- * @author alvar
+ * Clase principal del proyecto 
+ * @author Álvaro Camilo Almanza Báez, David Encinas de Frutos, José Miguel Olivares Gil, José Manuel Serrano Ojeda
+ * @version 1.0.0
  */
 public class PCDCliente {
 
     /**
-     * @param args the command line arguments
+     * Se instancia la interfaz, se hace visible y se evita que se modifique su
+     * tamaño.
+     * @param args no se usan
      */
     public static void main(String[] args) 
     {
-        // TODO code application logic here
         Principal ventana= new Principal();
         ventana.setVisible(true);
         ventana.setResizable(false);
