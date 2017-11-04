@@ -193,7 +193,6 @@ public class Principal extends javax.swing.JFrame {
         if(puertoValido(fi_puerto.getText()))
         {
             puerto=Integer.parseInt(fi_puerto.getText());
-            System.out.println(fi_fichero.getText());
             try {
                 // Se intenta abrir ell fichero
                 fichero = new BufferedReader(new FileReader(fi_fichero.getText()));
@@ -348,11 +347,14 @@ public class Principal extends javax.swing.JFrame {
             int recibo = 0;
             int ack = 5; 
             try{
-                while((recibo = this.entrada.read())>=0)
+                while(!this.entrada.ready()){}
+                recibo = this.entrada.read();
+                while(recibo>=0)
                 {
                     if (recibo == ack){
                         return true;
                     }
+                    recibo = this.entrada.read();
                 }
             }catch(IOException e){
                 return false;
@@ -381,10 +383,10 @@ public class Principal extends javax.swing.JFrame {
          * Envia el ACK al servidor, lo usamos para finalizar la comunicación
          */
         public void enviarAck(){
-            byte ack = 0x05;
+            int ack = 5;
             
             try {
-                this.salida.write(ack);
+                this.salida.writeChar(ack);
             } catch (IOException ex) {
                 System.out.println("No se pudo enviar el mensaje de fin de comunicación");
             }
@@ -396,12 +398,13 @@ public class Principal extends javax.swing.JFrame {
         public void Cerrar(){
             try {
                 this.seguir=false;
-                this.entrada.close();
-                this.salida.close();
-                this.cliente.close();
+                //this.entrada.close();
+                //this.salida.close();
+                //this.cliente.close();
+                
                 bt_conectar.setEnabled(true);
                 
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 System.out.println("No se pudo cerrar la comunicación");
             }
         }
